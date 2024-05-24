@@ -36,7 +36,7 @@
         select,
         button {
             width: 100%;
-            padding: 10px;
+            padding: 5px;
             margin: 5px 0 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -86,11 +86,29 @@
         }
 
         .form {
-            width: 90%;
+            width: 100%;
+        }
+
+        .formItem {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .formItem input {
+            width: 100px;
         }
 
         .limit {
             width: 90%;
+        }
+
+        .predictedTime {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .predictedTime select {
+            width: 70px;
         }
     </style>
 </head>
@@ -102,27 +120,101 @@
 
         <div class="form">
             <div>
-                <label for="race">Race:</label>
-                <input type="text" id="race" placeholder="Enter the race name">
+                <label>Predicted Time (hours):*</label>
+                <div class="predictedTime">
+                    <select id="predictedTimeHour">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                    </select>
+                    <label>Hours</label>
+                    <select id="predictedTimeMin">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                        <option>16</option>
+                        <option>17</option>
+                        <option>18</option>
+                        <option>19</option>
+                        <option>20</option>
+                        <option>21</option>
+                        <option>22</option>
+                        <option>23</option>
+                        <option>24</option>
+                        <option>25</option>
+                        <option>26</option>
+                        <option>27</option>
+                        <option>28</option>
+                        <option>29</option>
+                        <option>30</option>
+                        <option>31</option>
+                        <option>32</option>
+                        <option>33</option>
+                        <option>34</option>
+                        <option>35</option>
+                        <option>36</option>
+                        <option>37</option>
+                        <option>38</option>
+                        <option>39</option>
+                        <option>40</option>
+                        <option>41</option>
+                        <option>42</option>
+                        <option>43</option>
+                        <option>44</option>
+                        <option>45</option>
+                        <option>46</option>
+                        <option>47</option>
+                        <option>48</option>
+                        <option>49</option>
+                        <option>50</option>
+                        <option>51</option>
+                        <option>52</option>
+                        <option>53</option>
+                        <option>54</option>
+                        <option>55</option>
+                        <option>56</option>
+                        <option>57</option>
+                        <option>58</option>
+                        <option>59</option>
+                        <option>60</option>
+
+
+                    </select>
+                    <label>Minutes</label>
+                </div>
             </div>
-            <div>
-                <label for="predictedTime">Predicted Time (hours):*</label>
-                <input type="number" step="0.01" id="predictedTime" placeholder="Enter predicted time in hours"
-                    required>
-            </div>
-            <div>
+            <div class="formItem">
                 <label for="intervals">Intervals (min):</label>
                 <input type="number" step="1" id="intervals" placeholder="Leave blank for it to auto generate">
             </div>
-            <div>
+            <div class="formItem">
                 <label for="carbsPerHour">Carbs per Hour (grams):</label>
                 <input type="number" id="carbsPerHour" placeholder="Enter carbs per hour" value="60">
             </div>
-            <div>
+            <div class="formItem">
                 <label for="saltPerHour">Salt per Hour (mg):</label>
                 <input type="number" id="saltPerHour" placeholder="Enter salt per hour" value="300">
             </div>
-            <div>
+            <div class="formItem">
                 <label for="waterPerHour">Water per Hour (ml):</label>
                 <input type="number" id="waterPerHour" placeholder="Enter water per hour" value="500">
             </div>
@@ -234,10 +326,8 @@
             container.appendChild(newItem);
         }
 
-
         function generatePlan() {
-            const race = document.getElementById('race').value;
-            const predictedTime = parseFloat(document.getElementById('predictedTime').value);
+            const predictedTime = parseFloat(document.getElementById('predictedTimeHour').value) + parseFloat(document.getElementById('predictedTimeMin').value / 60);
             const carbsPerHour = parseFloat(document.getElementById('carbsPerHour').value);
             const saltPerHour = parseFloat(document.getElementById('saltPerHour').value);
             const waterPerHour = parseFloat(document.getElementById('waterPerHour').value);
@@ -254,8 +344,6 @@
                 };
             });
 
-            fuelingItems.sort((a, b) => b.carbs - a.carbs); // Prioritize items with higher carbs first
-
             const intervalTime = document.getElementById('intervals').value ? parseInt(document.getElementById('intervals').value) / 60 : fuelingItems[0].carbs / carbsPerHour;
             const intervals = Math.ceil(predictedTime / intervalTime);
 
@@ -263,9 +351,7 @@
             const saltPerInterval = saltPerHour * intervalTime;
             const waterPerInterval = waterPerHour * intervalTime;
 
-            let remainingCarbs = 0;
-            let remainingSalt = 0;
-            let remainingWater = 0;
+            fuelingItems.sort((a, b) => b.carbs - a.carbs); // Prioritize items with higher carbs first
 
             let totalCarbs = 0;
             let totalSalt = 0;
@@ -276,25 +362,20 @@
             let userGelTypeCount = 0;
             fuelingItems.forEach(item => { if (item.carbs > gramsCarbsToMarkAsGel) userGelTypeCount++ });
 
-            let plan = `<h2>Your Marathon Fueling Plan for ${race}</h2>`;
-            plan += '<h3>Fueling Schedule</h3>';
+            let plan = '<h2>Fueling Schedule</h2>';
 
             const fuelingSchedule = [];
 
-            for (let i = 1; i < intervals + 1; i++) {
-                //for some reason even though I add the remainder it's not reaching total.        
-                var startTime = (i - 1) * (60 * intervalTime);
-                var endTime = i * (60 * intervalTime);
+            for (let i = 0; i < intervals; i++) {
+                var startTime = i * (60 * intervalTime);
+                var endTime = (i + 1) * (60 * intervalTime);
 
-                if (i == intervals) {
-                    endTime = Math.floor((predictedTime % intervalTime) * 60) + ((i - 1) * (60 * intervalTime));
+                if (i + 1 == intervals && predictedTime % intervalTime != 0) {
+                    endTime = Math.floor((predictedTime % intervalTime) * 60) + (i * 60 * intervalTime);
                 }
+
                 let schedule = `<strong>${startTime} - ${endTime} min:</strong> <br>`;
                 let scheduleDetails = '';
-
-                let carbsNeeded = carbsPerInterval + remainingCarbs;
-                let saltNeeded = saltPerInterval + remainingSalt;
-                let waterNeeded = waterPerInterval + remainingWater;
 
                 //only does each one 5x
                 for (let k = 0; k < 5; k++) {
@@ -304,24 +385,23 @@
                         const addedSalt = totalSalt + item.salt;
                         const addedWater = totalWater + item.water;
 
-                        if (i == intervals) {
+                        if (i + 1 == intervals) {
                             let remainderTime = (predictedTime % intervalTime);
 
-                            endTime = Math.floor((predictedTime % intervalTime) * 60);
                             remainderCarbsPerInterval = carbsPerInterval * remainderTime;
                             remainderSaltPerInterval = saltPerInterval * remainderTime;
                             remainderWaterPerInterval = waterPerInterval * remainderTime;
 
-                            if ((addedCarbs > ((i - 1) * carbsPerInterval) + remainderCarbsPerInterval) ||
-                                (addedSalt > ((i - 1) * saltPerInterval) + remainderSaltPerInterval) ||
-                                (addedWater > ((i - 1) * waterPerInterval) + remainderWaterPerInterval)) {
+                            if ((addedCarbs > (i * carbsPerInterval) + remainderCarbsPerInterval) ||
+                                (addedSalt > (i * saltPerInterval) + remainderSaltPerInterval) ||
+                                (addedWater > (i * waterPerInterval) + remainderWaterPerInterval)) {
                                 return; // Skip adding if it exceeds the total amount
                             }
                         } else {
                             // Check if adding the item would exceed the total amount of carbs, salt, or water
-                            if ((addedCarbs > i * carbsPerInterval) ||
-                                (addedSalt > i * saltPerInterval) ||
-                                (addedWater > i * waterPerInterval)) {
+                            if ((addedCarbs > (i + 1) * carbsPerInterval) ||
+                                (addedSalt > (i + 1) * saltPerInterval) ||
+                                (addedWater > (i + 1) * waterPerInterval)) {
                                 return; // Skip adding if it exceeds the total amount
                             }
                         }
@@ -332,7 +412,7 @@
                             return;// Skip adding if the limit is reached
                         }
 
-                        //alternating algorithm
+                        // alternating algorithm
                         if (lastAdded.length >= userGelTypeCount) {
                             lastAdded = [];
                         }
@@ -352,6 +432,8 @@
                         totalSalt += item.salt;
                         totalWater += item.water;
 
+                        //array of each item, then I can divide them amoung intervals later.
+
                         if (item.used > 0) {
                             schedule += `${item.used} ${item.name} `;
                             schedule += `<span class="mini">(${item.carbs * item.used}g carbs, ${item.salt * item.used}mg salt, ${item.water * item.used}ml water)</span><br> `;
@@ -360,23 +442,31 @@
                     });
                 }
 
-
-                remainingCarbs = Math.max(carbsNeeded - totalCarbs, 0);
-                remainingSalt = Math.max(saltNeeded - totalSalt, 0);
-                remainingWater = Math.max(waterNeeded - totalWater, 0);
-
                 fuelingSchedule.push({ endTime, schedule });
             }
 
             fuelingSchedule.forEach(entry => {
                 plan += `<p>${entry.schedule}</p>`;
+
             });
 
+            plan += `<span class="mini">`
+            plan += `<span ${totalCarbs < carbsPerHour * predictedTime * .95 ? 'class="low"' : ''} >${totalCarbs}/${parseInt(carbsPerHour * predictedTime)}</span> grams carbs, `;
+            plan += `<span ${totalSalt < saltPerHour * predictedTime * .95 ? 'class="low"' : ''} >${totalSalt}/${parseInt(saltPerHour * predictedTime)}</span> mg salt, `;
+            plan += `<span ${totalWater < waterPerHour * predictedTime * .95 ? 'class="low"' : ''} >${totalWater}/${parseInt(waterPerHour * predictedTime)}</span> ml water, `;
+            plan += `</span>`;
 
-            let totalPlan = `<h3>Total Fueling Summary</h3>`;
-            totalPlan += `<p><strong>Total Carbs:</strong> ${totalCarbs} grams ${totalCarbs < carbsPerHour * predictedTime * .95 ? '<span class="low">(Low)</span>' : '(In Range)'}<br><span class="mini">${carbsPerHour * predictedTime}</span></p>`;
-            totalPlan += `<p><strong>Total Salt:</strong> ${totalSalt} mg ${totalSalt < saltPerHour * predictedTime * .95 ? '<span class="low">(Low)</span>' : '(In Range)'}<br><span class="mini">${saltPerHour * predictedTime}</span></p>`;
-            totalPlan += `<p><strong>Total Water:</strong> ${totalWater} ml ${totalWater < waterPerHour * predictedTime * .95 ? '<span class="low">(Low)</span>' : '(In Range)'}<br><span class="mini">${waterPerHour * predictedTime}</span></p>`;
+            shoppingList = '';
+            fuelingItems.forEach(item => {
+                if (item.usedTotal > 0) {
+                    shoppingList += item.usedTotal + ' ' + item.name + '<br>';
+                } else {
+                    return;
+                }
+            });
+
+            let totalPlan = `<h2>List</h2>`;
+            totalPlan += `<p>${shoppingList}</p>`;
 
             document.getElementById('plan').innerHTML = plan + totalPlan;
         }
