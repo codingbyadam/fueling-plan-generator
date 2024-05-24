@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marathon Fueling Plan Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input,
+        select,
+        button {
+            /* width: 100px; */
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .plus-button {
+            background-color: #007bff;
+        }
+
+        .plus-button:hover {
+            background-color: #0056b3;
+        }
+
+        .plan {
+            margin-top: 20px;
+        }
+
+        .plan p {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+
+        .fueling-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fueling-item select {
+            width: 70%;
+        }
+
+        .fueling-item button {
+            width: 25%;
+        }
+
+        .mini {
+            font-size: 0.8em;
+            color: #555;
+        }
+
+        .low {
+            color: red;
+        }
+
+        .flex {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Marathon Fueling Plan Generator</h1>
+
+
+        <div class="flex">
+            <div>
+                <label for="race">Race:</label>
+                <input type="text" id="race" placeholder="Enter the race name">
+            </div>
+            <div>
+
+                <label for="predictedTime">Predicted Time (hours):</label>
+                <input type="number" step="0.01" id="predictedTime" placeholder="Enter predicted time in hours">
+            </div>
+            <div>
+                <label for="intervals">Intervals (min):</label>
+                <input type="number" step="1" id="intervals" placeholder="Leave blank for it to auto generate">
+            </div>
+        </div>
+        <div class="flex">
+            <div>
+                <label for="carbsPerHour">Carbs per Hour (grams):</label>
+                <input type="number" id="carbsPerHour" placeholder="Enter carbs per hour" value="60">
+            </div>
+            <div>
+                <label for="saltPerHour">Salt per Hour (mg):</label>
+                <input type="number" id="saltPerHour" placeholder="Enter salt per hour" value="300">
+            </div>
+            <div>
+                <label for="waterPerHour">Water per Hour (ml):</label>
+                <input type="number" id="waterPerHour" placeholder="Enter water per hour" value="500">
+            </div>
+        </div>
+        <label for="fuelingItems">Fueling Items:</label>
+        <div id="fuelingItemsContainer">
+            <div class="fueling-item">
+                <select>
+                    <option value="SIS Beta Fuel" data-carbs="40" data-salt="30" data-water="0">SIS Beta Fuel - Flavored</option>
+                    <option value="SiS Beta Fuel Gel - Neutral" data-carbs="40" data-salt="15" data-water="0">SiS Beta Fuel Gel - Neutral</option>
+                    <option value="SiS Go Isotonic Energy Gels - Lemon & Lime" data-carbs="22" data-salt="4" data-water="0">SiS Go Isotonic Energy Gels - Lemon & Lime</option>
+                    <option value="Maurten Gel 100" data-carbs="25" data-salt="20" data-water="0">Maurten Gel 100</option>
+                    <option value="Maurten Gel 160" data-carbs="40" data-salt="30" data-water="0">Maurten Gel 160</option>
+                    <option value="Maurten Solid 160 - basic" data-carbs="41.7" data-salt="240" data-water="0">Maurten Solid 160 - basic</option>
+                    <option value="Maurten Solid 160 - cacao" data-carbs="42.2" data-salt="250" data-water="0">Maurten Solid 160 - cacao</option>
+                    <option value="Spring Awesome Sauce" data-carbs="45" data-salt="85" data-water="0">Spring Awesome Sauce</option>
+                    <option value="Spring Energy CanaBERRY" data-carbs="17" data-salt="60" data-water="0">Spring Energy CanaBERRY</option>
+                    <option value="GU Energy Chews (8 pieces) - Orange" data-carbs="22" data-salt="40" data-water="0">GU Energy Chews (8 pieces) - Orange</option>
+                    <option value="SaltStick Race Ready Electrolyte Capsules" data-carbs="0" data-salt="190" data-water="0">SaltStick Race Ready Electrolyte Capsules</option>
+                    <option value="500 ml Water" data-carbs="0" data-salt="0" data-water="500">500 ml Water</option>
+
+                </select>
+
+
+                <input type="number" placeholder="Limit">
+                <button class="plus-button" onclick="addFuelingItem()">+</button>
+            </div>
+        </div>
+
+        <button onclick="generatePlan()">Generate Plan</button>
+
+        <div class="plan" id="plan">
+        </div>
+    </div>
+
+    <script>
+        const gramsCarbsToMarkAsGel = 10;
+
+        function addFuelingItem() {
+            const container = document.getElementById('fuelingItemsContainer');
+            const newItem = document.createElement('div');
+            newItem.className = 'fueling-item';
+            newItem.innerHTML = `
+                <select>
+                    <option value="SIS Beta Fuel" data-carbs="40" data-salt="30" data-water="0">SIS Beta Fuel - Flavored</option>
+                    <option value="SiS Beta Fuel Gel - Neutral" data-carbs="40" data-salt="15" data-water="0">SiS Beta Fuel Gel - Neutral</option>
+                    <option value="SiS Go Isotonic Energy Gels - Lemon & Lime" data-carbs="22" data-salt="4" data-water="0">SiS Go Isotonic Energy Gels - Lemon & Lime</option>
+                    <option value="Maurten Gel 100" data-carbs="25" data-salt="20" data-water="0">Maurten Gel 100</option>
+                    <option value="Maurten Gel 160" data-carbs="40" data-salt="30" data-water="0">Maurten Gel 160</option>
+                    <option value="Maurten Solid 160 - basic" data-carbs="41.7" data-salt="240" data-water="0">Maurten Solid 160 - basic</option>
+                    <option value="Maurten Solid 160 - cacao" data-carbs="42.2" data-salt="250" data-water="0">Maurten Solid 160 - cacao</option>
+                    <option value="Spring Awesome Sauce" data-carbs="45" data-salt="85" data-water="0">Spring Awesome Sauce</option>
+                    <option value="Spring Energy CanaBERRY" data-carbs="17" data-salt="60" data-water="0">Spring Energy CanaBERRY</option>
+                    <option value="GU Energy Chews (8 pieces) - Orange" data-carbs="22" data-salt="40" data-water="0">GU Energy Chews (8 pieces) - Orange</option>
+                    <option value="SaltStick Race Ready Electrolyte Capsules" data-carbs="0" data-salt="190" data-water="0">SaltStick Race Ready Electrolyte Capsules</option>
+                    <option value="500 ml Water" data-carbs="0" data-salt="0" data-water="500">500 ml Water</option>
+
+</select>
+
+                <input type="number" placeholder="Limit">
+                <button class="plus-button" onclick="addFuelingItem()">+</button>
+            `;
+            container.appendChild(newItem);
+        }
+
+
+        function generatePlan() {
+            const race = document.getElementById('race').value;
+            const predictedTime = parseFloat(document.getElementById('predictedTime').value);
+            const carbsPerHour = parseFloat(document.getElementById('carbsPerHour').value);
+            const saltPerHour = parseFloat(document.getElementById('saltPerHour').value);
+            const waterPerHour = parseFloat(document.getElementById('waterPerHour').value);
+            const fuelingItems = Array.from(document.querySelectorAll('#fuelingItemsContainer .fueling-item')).map(itemDiv => {
+                const select = itemDiv.querySelector('select');
+                return {
+                    name: select.options[select.selectedIndex].text,
+                    carbs: parseFloat(select.options[select.selectedIndex].dataset.carbs),
+                    salt: parseFloat(select.options[select.selectedIndex].dataset.salt),
+                    water: parseFloat(select.options[select.selectedIndex].dataset.water),
+                    limit: parseInt(itemDiv.querySelector('input[type="number"]').value),
+                    usedTotal: 0,
+                    used: 0
+                };
+            });
+
+            fuelingItems.sort((a, b) => b.carbs - a.carbs); // Prioritize items with higher carbs first
+
+            const intervalTime = document.getElementById('intervals').value ? parseInt(document.getElementById('intervals').value) / 60 : fuelingItems[0].carbs / carbsPerHour;
+            const intervals = Math.ceil(predictedTime / intervalTime);
+
+            const carbsPerInterval = carbsPerHour * intervalTime;
+            const saltPerInterval = saltPerHour * intervalTime;
+            const waterPerInterval = waterPerHour * intervalTime;
+
+            let remainingCarbs = 0;
+            let remainingSalt = 0;
+            let remainingWater = 0;
+
+            let totalCarbs = 0;
+            let totalSalt = 0;
+            let totalWater = 0;
+
+            let lastAdded = new Array();
+
+            let userGelTypeCount = 0;
+            fuelingItems.forEach(item => { if (item.carbs > gramsCarbsToMarkAsGel) userGelTypeCount++ });
+
+            let plan = `<h2>Your Marathon Fueling Plan for ${race}</h2>`;
+            plan += '<h3>Fueling Schedule</h3>';
+
+            const fuelingSchedule = [];
+
+            for (let i = 1; i < intervals + 1; i++) {
+                //for some reason even though I add the remainder it's not reaching total.        
+                var startTime = (i - 1) * (60 * intervalTime);
+                var endTime = i * (60 * intervalTime);
+
+                if (i == intervals) {
+                    endTime = Math.floor((predictedTime % intervalTime) * 60) + ((i - 1) * (60 * intervalTime));
+                }
+                let schedule = `<strong>${startTime} - ${endTime} min:</strong> <br>`;
+                let scheduleDetails = '';
+
+                let carbsNeeded = carbsPerInterval + remainingCarbs;
+                let saltNeeded = saltPerInterval + remainingSalt;
+                let waterNeeded = waterPerInterval + remainingWater;
+
+//only does each one 5x
+                for (let k = 0; k < 5; k++) {
+                    fuelingItems.forEach(item => {
+                        // Check if adding the item at this interval brings us closer to the desired total
+                        const addedCarbs = totalCarbs + item.carbs;
+                        const addedSalt = totalSalt + item.salt;
+                        const addedWater = totalWater + item.water;
+
+                        if (i == intervals) {
+                            let remainderTime = (predictedTime % intervalTime);
+
+                            endTime = Math.floor((predictedTime % intervalTime) * 60);
+                            remainderCarbsPerInterval = carbsPerInterval * remainderTime;
+                            remainderSaltPerInterval = saltPerInterval * remainderTime;
+                            remainderWaterPerInterval = waterPerInterval * remainderTime;
+
+                            if ((addedCarbs > ((i - 1) * carbsPerInterval) + remainderCarbsPerInterval) ||
+                                (addedSalt > ((i - 1) * saltPerInterval) + remainderSaltPerInterval) ||
+                                (addedWater > ((i - 1) * waterPerInterval) + remainderWaterPerInterval)) {
+                                return; // Skip adding if it exceeds the total amount
+                            }
+                        } else {
+                            // Check if adding the item would exceed the total amount of carbs, salt, or water
+                            if ((addedCarbs > i * carbsPerInterval) ||
+                                (addedSalt > i * saltPerInterval) ||
+                                (addedWater > i * waterPerInterval)) {
+                                return; // Skip adding if it exceeds the total amount
+                            }
+                        }
+
+                        // Check if adding the item at this interval would exceed its limit
+                        if (item.usedTotal >= item.limit) {
+                            userGelTypeCount--;
+                            return;// Skip adding if the limit is reached
+                        }
+
+                        //alternating algorithm
+                        if (lastAdded.length >= userGelTypeCount) {
+                            lastAdded = [];
+                        }
+
+                        if (
+                            i != intervals //doesn't skip on the last one
+                            && lastAdded.includes(item) //if it is added but there are other gels that haven't it skips.
+                        ) {
+                            return;
+                        }
+
+                        // Add the item to the schedule
+                        lastAdded.push(item);
+                        item.used++;
+                        item.usedTotal++;
+                        totalCarbs += item.carbs;
+                        totalSalt += item.salt;
+                        totalWater += item.water;
+
+                        if (item.used > 0) {
+                            schedule += `${item.used} ${item.name} `;
+                            schedule += `<span class="mini">(${item.carbs * item.used}g carbs, ${item.salt * item.used}mg salt, ${item.water * item.used}ml water)</span><br> `;
+                            item.used = 0;
+                        }
+                    });
+                }
+
+
+                remainingCarbs = Math.max(carbsNeeded - totalCarbs, 0);
+                remainingSalt = Math.max(saltNeeded - totalSalt, 0);
+                remainingWater = Math.max(waterNeeded - totalWater, 0);
+
+                fuelingSchedule.push({ endTime, schedule });
+            }
+
+            fuelingSchedule.forEach(entry => {
+                plan += `<p>${entry.schedule}</p>`;
+            });
+
+
+            let totalPlan = `<h3>Total Fueling Summary</h3>`;
+            totalPlan += `<p><strong>Total Carbs:</strong> ${totalCarbs} grams ${totalCarbs < carbsPerHour * predictedTime * .95 ? '<span class="low">(Low)</span>' : '(In Range)'}<br><span class="mini">${carbsPerHour * predictedTime}</span></p>`;
+            totalPlan += `<p><strong>Total Salt:</strong> ${totalSalt} mg ${totalSalt < saltPerHour * predictedTime * .95 ? '<span class="low">(Low)</span>' : '(In Range)'}<br><span class="mini">${saltPerHour * predictedTime}</span></p>`;
+            totalPlan += `<p><strong>Total Water:</strong> ${totalWater} ml ${totalWater < waterPerHour * predictedTime * .95 ? '<span class="low">(Low)</span>' : '(In Range)'}<br><span class="mini">${waterPerHour * predictedTime}</span></p>`;
+
+            document.getElementById('plan').innerHTML = plan + totalPlan;
+        }
+
+    </script>
+</body>
+
+</html>
