@@ -344,14 +344,14 @@
                 };
             });
 
+            fuelingItems.sort((a, b) => b.carbs - a.carbs); // Prioritize items with higher carbs first
+
             const intervalTime = document.getElementById('intervals').value ? parseInt(document.getElementById('intervals').value) / 60 : fuelingItems[0].carbs / carbsPerHour;
             const intervals = Math.ceil(predictedTime / intervalTime);
 
             const carbsPerInterval = carbsPerHour * intervalTime;
             const saltPerInterval = saltPerHour * intervalTime;
             const waterPerInterval = waterPerHour * intervalTime;
-
-            fuelingItems.sort((a, b) => b.carbs - a.carbs); // Prioritize items with higher carbs first
 
             let totalCarbs = 0;
             let totalSalt = 0;
@@ -364,21 +364,9 @@
 
             let plan = '<h2>Fueling Schedule</h2>';
 
-            const fuelingSchedule = [];
-
             for (let i = 0; i < intervals; i++) {
-                var startTime = i * (60 * intervalTime);
-                var endTime = (i + 1) * (60 * intervalTime);
-
-                if (i + 1 == intervals && predictedTime % intervalTime != 0) {
-                    endTime = Math.floor((predictedTime % intervalTime) * 60) + (i * 60 * intervalTime);
-                }
-
-                let schedule = `<strong>${startTime} - ${endTime} min:</strong> <br>`;
-                let scheduleDetails = '';
-
-                //only does each one 5x
-                for (let k = 0; k < 5; k++) {
+                //figure out how many gels per interval
+                for (let k = 0; k < 5; k++) { //loop through 5 times to make sure the spots had the oportunity to get filled.
                     fuelingItems.forEach(item => {
                         // Check if adding the item at this interval brings us closer to the desired total
                         const addedCarbs = totalCarbs + item.carbs;
@@ -411,7 +399,7 @@
                             userGelTypeCount--;
                             return;// Skip adding if the limit is reached
                         }
-
+//alternating schedule sometimes messes things up. (for example it might leave the last one blank when a gel would fit.)
                         // alternating algorithm
                         if (lastAdded.length >= userGelTypeCount) {
                             lastAdded = [];
@@ -431,24 +419,31 @@
                         totalCarbs += item.carbs;
                         totalSalt += item.salt;
                         totalWater += item.water;
-
-                        //array of each item, then I can divide them amoung intervals later.
-
-                        if (item.used > 0) {
-                            schedule += `${item.used} ${item.name} `;
-                            schedule += `<span class="mini">(${item.carbs * item.used}g carbs, ${item.salt * item.used}mg salt, ${item.water * item.used}ml water)</span><br> `;
-                            item.used = 0;
-                        }
                     });
                 }
 
-                fuelingSchedule.push({ endTime, schedule });
+                //generate each interval
+                var startTime = Math.ceil(i * (60 * intervalTime));
+                var endTime = Math.floor((i + 1) * (60 * intervalTime));
+
+                if (i + 1 == intervals && predictedTime % intervalTime != 0) {
+                    endTime = Math.floor((predictedTime % intervalTime) * 60) + (i * 60 * intervalTime);
+                }
+
+                let schedule = `<strong>${startTime} - ${endTime} min:</strong> <br>`;
+
+                fuelingItems.forEach(item => {
+                    if (item.used > 0) {
+                        schedule += `${item.used} ${item.name} `;
+                        schedule += `<span class="mini">(${item.carbs * item.used}g carbs, ${item.salt * item.used}mg salt, ${item.water * item.used}ml water)</span><br> `;
+                        item.used = 0;
+                    }
+                });
+
+                // schedule += `<span class="mini">(${totalCarbs}g carbs, ${totalSalt}mg salt, ${totalWater}ml water)</span><br> `;
+
+                plan += '<p>' + schedule + '</p>';
             }
-
-            fuelingSchedule.forEach(entry => {
-                plan += `<p>${entry.schedule}</p>`;
-
-            });
 
             plan += `<span class="mini">`
             plan += `<span ${totalCarbs < carbsPerHour * predictedTime * .95 ? 'class="low"' : ''} >${totalCarbs}/${parseInt(carbsPerHour * predictedTime)}</span> grams carbs, `;
