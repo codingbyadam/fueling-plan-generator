@@ -35,14 +35,19 @@
         input,
         select,
         button {
-            /* width: 100px; */
+            width: 100%;
             padding: 10px;
             margin: 5px 0 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
 
+        #fuelingItemsContainer {
+            width: 100%;
+        }
+
         button {
+            /* width: 10px; */
             background-color: #28a745;
             color: white;
             cursor: pointer;
@@ -71,20 +76,6 @@
             margin: 5px 0;
         }
 
-        .fueling-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .fueling-item select {
-            width: 70%;
-        }
-
-        .fueling-item button {
-            width: 25%;
-        }
-
         .mini {
             font-size: 0.8em;
             color: #555;
@@ -94,10 +85,12 @@
             color: red;
         }
 
-        .flex {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+        .form {
+            width: 90%;
+        }
+
+        .limit {
+            width: 90%;
         }
     </style>
 </head>
@@ -107,22 +100,20 @@
         <h1>Marathon Fueling Plan Generator</h1>
 
 
-        <div class="flex">
+        <div class="form">
             <div>
                 <label for="race">Race:</label>
                 <input type="text" id="race" placeholder="Enter the race name">
             </div>
             <div>
-
-                <label for="predictedTime">Predicted Time (hours):</label>
-                <input type="number" step="0.01" id="predictedTime" placeholder="Enter predicted time in hours">
+                <label for="predictedTime">Predicted Time (hours):*</label>
+                <input type="number" step="0.01" id="predictedTime" placeholder="Enter predicted time in hours"
+                    required>
             </div>
             <div>
                 <label for="intervals">Intervals (min):</label>
                 <input type="number" step="1" id="intervals" placeholder="Leave blank for it to auto generate">
             </div>
-        </div>
-        <div class="flex">
             <div>
                 <label for="carbsPerHour">Carbs per Hour (grams):</label>
                 <input type="number" id="carbsPerHour" placeholder="Enter carbs per hour" value="60">
@@ -136,30 +127,55 @@
                 <input type="number" id="waterPerHour" placeholder="Enter water per hour" value="500">
             </div>
         </div>
-        <label for="fuelingItems">Fueling Items:</label>
-        <div id="fuelingItemsContainer">
-            <div class="fueling-item">
-                <select>
-                    <option value="SIS Beta Fuel" data-carbs="40" data-salt="30" data-water="0">SIS Beta Fuel - Flavored</option>
-                    <option value="SiS Beta Fuel Gel - Neutral" data-carbs="40" data-salt="15" data-water="0">SiS Beta Fuel Gel - Neutral</option>
-                    <option value="SiS Go Isotonic Energy Gels - Lemon & Lime" data-carbs="22" data-salt="4" data-water="0">SiS Go Isotonic Energy Gels - Lemon & Lime</option>
-                    <option value="Maurten Gel 100" data-carbs="25" data-salt="20" data-water="0">Maurten Gel 100</option>
-                    <option value="Maurten Gel 160" data-carbs="40" data-salt="30" data-water="0">Maurten Gel 160</option>
-                    <option value="Maurten Solid 160 - basic" data-carbs="41.7" data-salt="240" data-water="0">Maurten Solid 160 - basic</option>
-                    <option value="Maurten Solid 160 - cacao" data-carbs="42.2" data-salt="250" data-water="0">Maurten Solid 160 - cacao</option>
-                    <option value="Spring Awesome Sauce" data-carbs="45" data-salt="85" data-water="0">Spring Awesome Sauce</option>
-                    <option value="Spring Energy CanaBERRY" data-carbs="17" data-salt="60" data-water="0">Spring Energy CanaBERRY</option>
-                    <option value="GU Energy Chews (8 pieces) - Orange" data-carbs="22" data-salt="40" data-water="0">GU Energy Chews (8 pieces) - Orange</option>
-                    <option value="SaltStick Race Ready Electrolyte Capsules" data-carbs="0" data-salt="190" data-water="0">SaltStick Race Ready Electrolyte Capsules</option>
-                    <option value="500 ml Water" data-carbs="0" data-salt="0" data-water="500">500 ml Water</option>
+        <table id="fuelingItemsContainer">
+            <tr>
+                <th><label for="fuelingItems">Fueling Items</label></th>
+                <th>
+                    <label>Limit</label>
+                </th>
+                <th></th>
+            </tr>
+            <tr class="fueling-item">
+                <td>
 
-                </select>
+                    <select>
+                        <option value="SIS Beta Fuel" data-carbs="40" data-salt="30" data-water="0">SIS Beta
+                            Fuel - Flavored</option>
+                        <option value="SiS Beta Fuel Gel - Neutral" data-carbs="40" data-salt="15" data-water="0">SiS
+                            Beta Fuel Gel - Neutral</option>
+                        <option value="SiS Go Isotonic Energy Gels - Lemon & Lime" data-carbs="22" data-salt="4"
+                            data-water="0">SiS Go Isotonic Energy Gels - Lemon & Lime</option>
+                        <option value="Maurten Gel 100" data-carbs="25" data-salt="20" data-water="0">Maurten
+                            Gel 100</option>
+                        <option value="Maurten Gel 160" data-carbs="40" data-salt="30" data-water="0">Maurten
+                            Gel 160</option>
+                        <option value="Maurten Solid 160 - basic" data-carbs="41.7" data-salt="240" data-water="0">
+                            Maurten Solid 160 - basic</option>
+                        <option value="Maurten Solid 160 - cacao" data-carbs="42.2" data-salt="250" data-water="0">
+                            Maurten Solid 160 - cacao</option>
+                        <option value="Spring Awesome Sauce" data-carbs="45" data-salt="85" data-water="0">
+                            Spring Awesome Sauce</option>
+                        <option value="Spring Energy CanaBERRY" data-carbs="17" data-salt="60" data-water="0">
+                            Spring Energy CanaBERRY</option>
+                        <option value="GU Energy Chews (8 pieces) - Orange" data-carbs="22" data-salt="40"
+                            data-water="0">GU Energy Chews (8 pieces) - Orange</option>
+                        <option value="SaltStick Race Ready Electrolyte Capsules" data-carbs="0" data-salt="190"
+                            data-water="0">SaltStick Race Ready Electrolyte Capsules</option>
+                        <option value="500 ml Water" data-carbs="0" data-salt="0" data-water="500">500 ml Water
+                        </option>
 
+                    </select>
 
-                <input type="number" placeholder="Limit">
-                <button class="plus-button" onclick="addFuelingItem()">+</button>
-            </div>
-        </div>
+                </td>
+                <td>
+                    <input type="number" class="limit">
+                </td>
+                <td>
+                    <button class="plus-button" onclick="addFuelingItem()">+</button>
+                </td>
+            </tr>
+
+        </table>
 
         <button onclick="generatePlan()">Generate Plan</button>
 
@@ -172,27 +188,48 @@
 
         function addFuelingItem() {
             const container = document.getElementById('fuelingItemsContainer');
-            const newItem = document.createElement('div');
+            const newItem = document.createElement('tr');
             newItem.className = 'fueling-item';
             newItem.innerHTML = `
-                <select>
-                    <option value="SIS Beta Fuel" data-carbs="40" data-salt="30" data-water="0">SIS Beta Fuel - Flavored</option>
-                    <option value="SiS Beta Fuel Gel - Neutral" data-carbs="40" data-salt="15" data-water="0">SiS Beta Fuel Gel - Neutral</option>
-                    <option value="SiS Go Isotonic Energy Gels - Lemon & Lime" data-carbs="22" data-salt="4" data-water="0">SiS Go Isotonic Energy Gels - Lemon & Lime</option>
-                    <option value="Maurten Gel 100" data-carbs="25" data-salt="20" data-water="0">Maurten Gel 100</option>
-                    <option value="Maurten Gel 160" data-carbs="40" data-salt="30" data-water="0">Maurten Gel 160</option>
-                    <option value="Maurten Solid 160 - basic" data-carbs="41.7" data-salt="240" data-water="0">Maurten Solid 160 - basic</option>
-                    <option value="Maurten Solid 160 - cacao" data-carbs="42.2" data-salt="250" data-water="0">Maurten Solid 160 - cacao</option>
-                    <option value="Spring Awesome Sauce" data-carbs="45" data-salt="85" data-water="0">Spring Awesome Sauce</option>
-                    <option value="Spring Energy CanaBERRY" data-carbs="17" data-salt="60" data-water="0">Spring Energy CanaBERRY</option>
-                    <option value="GU Energy Chews (8 pieces) - Orange" data-carbs="22" data-salt="40" data-water="0">GU Energy Chews (8 pieces) - Orange</option>
-                    <option value="SaltStick Race Ready Electrolyte Capsules" data-carbs="0" data-salt="190" data-water="0">SaltStick Race Ready Electrolyte Capsules</option>
-                    <option value="500 ml Water" data-carbs="0" data-salt="0" data-water="500">500 ml Water</option>
 
-</select>
+                <td>
 
-                <input type="number" placeholder="Limit">
-                <button class="plus-button" onclick="addFuelingItem()">+</button>
+                    <select>
+                        <option value="SIS Beta Fuel" data-carbs="40" data-salt="30" data-water="0">SIS Beta
+                            Fuel - Flavored</option>
+                        <option value="SiS Beta Fuel Gel - Neutral" data-carbs="40" data-salt="15" data-water="0">SiS
+                            Beta Fuel Gel - Neutral</option>
+                        <option value="SiS Go Isotonic Energy Gels - Lemon & Lime" data-carbs="22" data-salt="4"
+                            data-water="0">SiS Go Isotonic Energy Gels - Lemon & Lime</option>
+                        <option value="Maurten Gel 100" data-carbs="25" data-salt="20" data-water="0">Maurten
+                            Gel 100</option>
+                        <option value="Maurten Gel 160" data-carbs="40" data-salt="30" data-water="0">Maurten
+                            Gel 160</option>
+                        <option value="Maurten Solid 160 - basic" data-carbs="41.7" data-salt="240" data-water="0">
+                            Maurten Solid 160 - basic</option>
+                        <option value="Maurten Solid 160 - cacao" data-carbs="42.2" data-salt="250" data-water="0">
+                            Maurten Solid 160 - cacao</option>
+                        <option value="Spring Awesome Sauce" data-carbs="45" data-salt="85" data-water="0">
+                            Spring Awesome Sauce</option>
+                        <option value="Spring Energy CanaBERRY" data-carbs="17" data-salt="60" data-water="0">
+                            Spring Energy CanaBERRY</option>
+                        <option value="GU Energy Chews (8 pieces) - Orange" data-carbs="22" data-salt="40"
+                            data-water="0">GU Energy Chews (8 pieces) - Orange</option>
+                        <option value="SaltStick Race Ready Electrolyte Capsules" data-carbs="0" data-salt="190"
+                            data-water="0">SaltStick Race Ready Electrolyte Capsules</option>
+                        <option value="500 ml Water" data-carbs="0" data-salt="0" data-water="500">500 ml Water
+                        </option>
+
+                    </select>
+
+                </td>
+                <td>
+                    <input type="number" class="limit">
+                </td>
+                <td>
+                    <button class="plus-button" onclick="addFuelingItem()">+</button>
+                </td>
+
             `;
             container.appendChild(newItem);
         }
@@ -259,7 +296,7 @@
                 let saltNeeded = saltPerInterval + remainingSalt;
                 let waterNeeded = waterPerInterval + remainingWater;
 
-//only does each one 5x
+                //only does each one 5x
                 for (let k = 0; k < 5; k++) {
                     fuelingItems.forEach(item => {
                         // Check if adding the item at this interval brings us closer to the desired total
