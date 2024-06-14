@@ -4,291 +4,468 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Running Race Timer</title>
+    <title>Marathon Fueling Plan Generator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
-            overflow: hidden;
-            /* Prevents body from scrolling */
+            padding: 20px;
+            background-color: #f4f4f4;
+            box-sizing: border-box;
         }
 
         .container {
-            background-color: #fff;
-            padding: 0px 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-            position: relative;
-            max-height: 90vh;
-            /* Limits container height */
-            overflow-y: auto;
-            /* Enables vertical scrolling */
-        }
-
-
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:disabled {
-            background-color: #ccc;
-        }
-
-        #startButton,
-        #recordTimeButton {
-            font-size: 24px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
             padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 5px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #fuelingItemsContainer {
             width: 100%;
         }
 
-        #resetButton {
-            background-color: #f44336;
-            font-size: 12px;
-            padding: 5px 10px;
-            /* position: absolute;
-            top: 10px;
-            right: 0px; */
-        }
-
-        #timerDisplay {
-            font-size: 36px;
-            margin: 0px 0px 20px 0;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        li {
-            background-color: #eee;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        li button {
-            background-color: #f44336;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
+        button {
+            /* width: 10px; */
+            background-color: #28a745;
+            color: white;
             cursor: pointer;
         }
 
-        #timesListContainer {
-            margin-top: 220px;
+        button:hover {
+            background-color: #218838;
         }
 
-        #fixedTimer {
-            position: fixed;
-            height: 220px;
-            width: 400px;
-            background-color: white;
+        .plus-button {
+            background-color: #007bff;
         }
 
-        #header {
+        .plus-button:hover {
+            background-color: #0056b3;
+        }
+
+        .plan {
+            margin-top: 20px;
+        }
+
+        .plan p {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+
+        .mini {
+            font-size: 0.8em;
+            color: #555;
+        }
+
+        .low {
+            color: red;
+        }
+
+        .form {
+            width: 100%;
+        }
+
+        .formItem {
             display: flex;
-            justify-content: space-around;
-            align-items: center;
+            justify-content: space-between;
+        }
+
+        .formItem input {
+            width: 100px;
+        }
+
+        .limit {
+            width: 90%;
+        }
+
+        .predictedTime {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .predictedTime select {
+            width: 70px;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div id="fixedTimer">
-            <div id="header">
-                <h1>Running Race Timer</h1>
-                <div>
-                    <button id="resetButton">Reset</button>
+        <h1>Marathon Fueling Plan Generator</h1>
+
+
+        <div class="form">
+            <div>
+                <label>Predicted Time (hours):*</label>
+                <div class="predictedTime">
+                    <select id="predictedTimeHour">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                    </select>
+                    <label>Hours</label>
+                    <select id="predictedTimeMin">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                        <option>16</option>
+                        <option>17</option>
+                        <option>18</option>
+                        <option>19</option>
+                        <option>20</option>
+                        <option>21</option>
+                        <option>22</option>
+                        <option>23</option>
+                        <option>24</option>
+                        <option>25</option>
+                        <option>26</option>
+                        <option>27</option>
+                        <option>28</option>
+                        <option>29</option>
+                        <option>30</option>
+                        <option>31</option>
+                        <option>32</option>
+                        <option>33</option>
+                        <option>34</option>
+                        <option>35</option>
+                        <option>36</option>
+                        <option>37</option>
+                        <option>38</option>
+                        <option>39</option>
+                        <option>40</option>
+                        <option>41</option>
+                        <option>42</option>
+                        <option>43</option>
+                        <option>44</option>
+                        <option>45</option>
+                        <option>46</option>
+                        <option>47</option>
+                        <option>48</option>
+                        <option>49</option>
+                        <option>50</option>
+                        <option>51</option>
+                        <option>52</option>
+                        <option>53</option>
+                        <option>54</option>
+                        <option>55</option>
+                        <option>56</option>
+                        <option>57</option>
+                        <option>58</option>
+                        <option>59</option>
+                        <option>60</option>
+
+
+                    </select>
+                    <label>Minutes</label>
                 </div>
             </div>
-            <div id="timerDisplay">00:00:00</div>
-            <button id="startButton">Start Race</button>
-            <button id="recordTimeButton" style="display: none;">Record Finisher</button>
+            <div class="formItem">
+                <label for="intervals">Intervals (min):</label>
+                <input type="number" step="1" id="intervals" placeholder="Leave blank for it to auto generate">
+            </div>
+            <div class="formItem">
+                <label for="carbsPerHour">Carbs per Hour (grams):</label>
+                <input type="number" id="carbsPerHour" placeholder="Enter carbs per hour" value="60">
+            </div>
+            <div class="formItem">
+                <label for="saltPerHour">Salt per Hour (mg):</label>
+                <input type="number" id="saltPerHour" placeholder="Enter salt per hour" value="300">
+            </div>
+            <div class="formItem">
+                <label for="waterPerHour">Water per Hour (ml):</label>
+                <input type="number" id="waterPerHour" placeholder="Enter water per hour" value="500">
+            </div>
         </div>
-        <div id="timesListContainer">
-            <ul id="timesList"></ul>
+        <table id="fuelingItemsContainer">
+            <tr>
+                <th><label for="fuelingItems">Fueling Items</label></th>
+                <th>
+                    <label>Limit</label>
+                </th>
+                <th></th>
+            </tr>
+            <tr class="fueling-item">
+                <td>
+
+                    <select>
+                        <option value="SIS Beta Fuel" data-carbs="40" data-salt="30" data-water="0">SIS Beta
+                            Fuel - Flavored</option>
+                        <option value="SiS Beta Fuel Gel - Neutral" data-carbs="40" data-salt="15" data-water="0">SiS
+                            Beta Fuel Gel - Neutral</option>
+                        <option value="SiS Go Isotonic Energy Gels - Lemon & Lime" data-carbs="22" data-salt="4"
+                            data-water="0">SiS Go Isotonic Energy Gels - Lemon & Lime</option>
+                        <option value="Maurten Gel 100" data-carbs="25" data-salt="20" data-water="0">Maurten
+                            Gel 100</option>
+                        <option value="Maurten Gel 160" data-carbs="40" data-salt="30" data-water="0">Maurten
+                            Gel 160</option>
+                        <option value="Maurten Solid 160 - basic" data-carbs="41.7" data-salt="240" data-water="0">
+                            Maurten Solid 160 - basic</option>
+                        <option value="Maurten Solid 160 - cacao" data-carbs="42.2" data-salt="250" data-water="0">
+                            Maurten Solid 160 - cacao</option>
+                        <option value="Spring Awesome Sauce" data-carbs="45" data-salt="85" data-water="0">
+                            Spring Awesome Sauce</option>
+                        <option value="Spring Energy CanaBERRY" data-carbs="17" data-salt="60" data-water="0">
+                            Spring Energy CanaBERRY</option>
+                        <option value="GU Energy Chews (8 pieces) - Orange" data-carbs="22" data-salt="40"
+                            data-water="0">GU Energy Chews (8 pieces) - Orange</option>
+                        <option value="SaltStick Race Ready Electrolyte Capsules" data-carbs="0" data-salt="190"
+                            data-water="0">SaltStick Race Ready Electrolyte Capsules</option>
+                        <option value="500 ml Water" data-carbs="0" data-salt="0" data-water="500">500 ml Water
+                        </option>
+
+                    </select>
+
+                </td>
+                <td>
+                    <input type="number" class="limit">
+                </td>
+                <td>
+                    <button class="plus-button" onclick="addFuelingItem()">+</button>
+                </td>
+            </tr>
+
+        </table>
+
+        <button onclick="generatePlan()">Generate Plan</button>
+
+        <div class="plan" id="plan">
         </div>
     </div>
+
     <script>
-        let startTime;
-        let timerInterval;
-        let db;
-        let finisherCount = 0;
+        const gramsCarbsToMarkAsGel = 10;
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const startButton = document.getElementById('startButton');
-            const recordTimeButton = document.getElementById('recordTimeButton');
-            const resetButton = document.getElementById('resetButton');
-            const timesList = document.getElementById('timesList');
-            const timerDisplay = document.getElementById('timerDisplay');
+        function addFuelingItem() {
+            const container = document.getElementById('fuelingItemsContainer');
+            const newItem = document.createElement('tr');
+            newItem.className = 'fueling-item';
+            newItem.innerHTML = `
 
-            startButton.addEventListener('click', startRace);
-            recordTimeButton.addEventListener('click', recordFinisherTime);
-            resetButton.addEventListener('click', resetRace);
+                <td>
 
-            initializeDB();
-            loadSavedTimes();
+                    <select>
+                        <option value="SIS Beta Fuel" data-carbs="40" data-salt="30" data-water="0">SIS Beta
+                            Fuel - Flavored</option>
+                        <option value="SiS Beta Fuel Gel - Neutral" data-carbs="40" data-salt="15" data-water="0">SiS
+                            Beta Fuel Gel - Neutral</option>
+                        <option value="SiS Go Isotonic Energy Gels - Lemon & Lime" data-carbs="22" data-salt="4"
+                            data-water="0">SiS Go Isotonic Energy Gels - Lemon & Lime</option>
+                        <option value="Maurten Gel 100" data-carbs="25" data-salt="20" data-water="0">Maurten
+                            Gel 100</option>
+                        <option value="Maurten Gel 160" data-carbs="40" data-salt="30" data-water="0">Maurten
+                            Gel 160</option>
+                        <option value="Maurten Solid 160 - basic" data-carbs="41.7" data-salt="240" data-water="0">
+                            Maurten Solid 160 - basic</option>
+                        <option value="Maurten Solid 160 - cacao" data-carbs="42.2" data-salt="250" data-water="0">
+                            Maurten Solid 160 - cacao</option>
+                        <option value="Spring Awesome Sauce" data-carbs="45" data-salt="85" data-water="0">
+                            Spring Awesome Sauce</option>
+                        <option value="Spring Energy CanaBERRY" data-carbs="17" data-salt="60" data-water="0">
+                            Spring Energy CanaBERRY</option>
+                        <option value="GU Energy Chews (8 pieces) - Orange" data-carbs="22" data-salt="40"
+                            data-water="0">GU Energy Chews (8 pieces) - Orange</option>
+                        <option value="SaltStick Race Ready Electrolyte Capsules" data-carbs="0" data-salt="190"
+                            data-water="0">SaltStick Race Ready Electrolyte Capsules</option>
+                        <option value="500 ml Water" data-carbs="0" data-salt="0" data-water="500">500 ml Water
+                        </option>
 
-            if (localStorage.getItem('raceStarted')) {
-                startTime = parseInt(localStorage.getItem('startTime'));
-                finisherCount = parseInt(localStorage.getItem('finisherCount'));
-                startButton.style.display = 'none';
-                recordTimeButton.style.display = 'block';
-                recordTimeButton.disabled = false;
-                resumeTimer();
-            }
+                    </select>
 
-            function startRace() {
-                startTime = new Date().getTime();
-                localStorage.setItem('startTime', startTime);
-                localStorage.setItem('raceStarted', true);
-                localStorage.setItem('finisherCount', 0);
-                localStorage.setItem('finisherTimes', JSON.stringify([]));
-                startButton.style.display = 'none';
-                recordTimeButton.style.display = 'block';
-                recordTimeButton.disabled = false;
-                saveTime('startTime', startTime);
-                startTimer();
-            }
+                </td>
+                <td>
+                    <input type="number" class="limit">
+                </td>
+                <td>
+                    <button class="plus-button" onclick="addFuelingItem()">+</button>
+                </td>
 
-            function recordFinisherTime() {
-                finisherCount++;
-                localStorage.setItem('finisherCount', finisherCount);
-                const finisherTime = new Date().getTime() - startTime;
-                addTimeToList(finisherTime, finisherCount);
-                saveTime('finisherTime', finisherTime, finisherCount);
-            }
+            `;
+            container.appendChild(newItem);
+        }
 
-            function addTimeToList(time, place, save = true) {
-                const li = document.createElement('li');
-                li.textContent = `Place ${place}: ${formatTime(time)}`;
-                const removeButton = document.createElement('button');
-                removeButton.textContent = 'Remove';
-                removeButton.addEventListener('click', () => removePlace(li, place));
-                li.appendChild(removeButton);
-                timesList.insertBefore(li, timesList.firstChild); // Change to insert at the top
-                if (save) saveFinisherTime(place, time);
-            }
+        function generatePlan() {
+            const predictedTime = parseFloat(document.getElementById('predictedTimeHour').value) + parseFloat(document.getElementById('predictedTimeMin').value / 60);
+            const carbsPerHour = parseFloat(document.getElementById('carbsPerHour').value);
+            const saltPerHour = parseFloat(document.getElementById('saltPerHour').value);
+            const waterPerHour = parseFloat(document.getElementById('waterPerHour').value);
+            const fuelingItems = Array.from(document.querySelectorAll('#fuelingItemsContainer .fueling-item')).map(itemDiv => {
+                const select = itemDiv.querySelector('select');
+                return {
+                    name: select.options[select.selectedIndex].text,
+                    carbs: parseFloat(select.options[select.selectedIndex].dataset.carbs),
+                    salt: parseFloat(select.options[select.selectedIndex].dataset.salt),
+                    water: parseFloat(select.options[select.selectedIndex].dataset.water),
+                    limit: parseInt(itemDiv.querySelector('input[type="number"]').value),
+                    usedTotal: 0,
+                    used: 0
+                };
+            });
 
-            function removePlace(li, place) {
-                if (confirm("Are you sure you want to remove this place?")) {
-                    timesList.removeChild(li);
-                    removeFinisherTime(place);
+            fuelingItems.sort((a, b) => b.carbs - a.carbs); // Prioritize items with higher carbs first
+
+            const intervalTime = document.getElementById('intervals').value ? parseInt(document.getElementById('intervals').value) / 60 : fuelingItems[0].carbs / carbsPerHour;
+            const intervals = Math.ceil(predictedTime / intervalTime);
+
+            const carbsPerInterval = carbsPerHour * intervalTime;
+            const saltPerInterval = saltPerHour * intervalTime;
+            const waterPerInterval = waterPerHour * intervalTime;
+
+            let totalCarbs = 0;
+            let totalSalt = 0;
+            let totalWater = 0;
+
+            let lastAdded = new Array();
+
+            let userGelTypeCount = 0;
+            fuelingItems.forEach(item => { if (item.carbs > gramsCarbsToMarkAsGel) userGelTypeCount++ });
+
+            let plan = '<h2>Fueling Schedule</h2>';
+
+            for (let i = 0; i < intervals; i++) {
+                //figure out how many gels per interval
+                for (let k = 0; k < 5; k++) { //loop through 5 times to make sure the spots had the oportunity to get filled.
+                    fuelingItems.forEach(item => {
+                        // Check if adding the item at this interval brings us closer to the desired total
+                        const addedCarbs = totalCarbs + item.carbs;
+                        const addedSalt = totalSalt + item.salt;
+                        const addedWater = totalWater + item.water;
+
+                        if (i + 1 == intervals) {
+                            let remainderTime = (predictedTime % intervalTime);
+
+                            remainderCarbsPerInterval = carbsPerInterval * remainderTime;
+                            remainderSaltPerInterval = saltPerInterval * remainderTime;
+                            remainderWaterPerInterval = waterPerInterval * remainderTime;
+
+                            if ((addedCarbs > (i * carbsPerInterval) + remainderCarbsPerInterval) ||
+                                (addedSalt > (i * saltPerInterval) + remainderSaltPerInterval) ||
+                                (addedWater > (i * waterPerInterval) + remainderWaterPerInterval)) {
+                                return; // Skip adding if it exceeds the total amount
+                            }
+                        } else {
+                            // Check if adding the item would exceed the total amount of carbs, salt, or water
+                            if ((addedCarbs > (i + 1) * carbsPerInterval) ||
+                                (addedSalt > (i + 1) * saltPerInterval) ||
+                                (addedWater > (i + 1) * waterPerInterval)) {
+                                return; // Skip adding if it exceeds the total amount
+                            }
+                        }
+
+                        // Check if adding the item at this interval would exceed its limit
+                        if (item.usedTotal >= item.limit) {
+                            userGelTypeCount--;
+                            return;// Skip adding if the limit is reached
+                        }
+//alternating schedule sometimes messes things up. (for example it might leave the last one blank when a gel would fit.)
+                        // alternating algorithm
+                        if (lastAdded.length >= userGelTypeCount) {
+                            lastAdded = [];
+                        }
+
+                        if (
+                            i != intervals //doesn't skip on the last one
+                            && lastAdded.includes(item) //if it is added but there are other gels that haven't it skips.
+                        ) {
+                            return;
+                        }
+
+                        // Add the item to the schedule
+                        lastAdded.push(item);
+                        item.used++;
+                        item.usedTotal++;
+                        totalCarbs += item.carbs;
+                        totalSalt += item.salt;
+                        totalWater += item.water;
+                    });
                 }
-            }
 
-            function formatTime(milliseconds) {
-                let totalSeconds = Math.floor(milliseconds / 1000);
-                let hours = Math.floor(totalSeconds / 3600);
-                let minutes = Math.floor((totalSeconds % 3600) / 60);
-                let seconds = totalSeconds % 60;
+                //generate each interval
+                var startTime = Math.ceil(i * (60 * intervalTime));
+                var endTime = Math.floor((i + 1) * (60 * intervalTime));
 
-                return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-            }
-
-            function pad(number) {
-                return number < 10 ? '0' + number : number;
-            }
-
-            function startTimer() {
-                timerInterval = setInterval(() => {
-                    const elapsedTime = new Date().getTime() - startTime;
-                    timerDisplay.textContent = formatTime(elapsedTime);
-                }, 1000);
-            }
-
-            function resumeTimer() {
-                startTimer();
-            }
-
-            function resetRace() {
-                if (confirm("Are you sure you want to reset the race?")) {
-                    clearInterval(timerInterval);
-                    localStorage.removeItem('startTime');
-                    localStorage.removeItem('raceStarted');
-                    localStorage.removeItem('finisherCount');
-                    localStorage.removeItem('finisherTimes');
-                    startButton.style.display = 'block';
-                    recordTimeButton.style.display = 'none';
-                    recordTimeButton.disabled = true;
-                    timerDisplay.textContent = '00:00:00';
-                    timesList.innerHTML = '';
-                    finisherCount = 0;
+                if (i + 1 == intervals && predictedTime % intervalTime != 0) {
+                    endTime = Math.floor((predictedTime % intervalTime) * 60) + (i * 60 * intervalTime);
                 }
-            }
 
-            function initializeDB() {
-                const request = indexedDB.open('raceTimerDB', 1);
+                let schedule = `<strong>${startTime} - ${endTime} min:</strong> <br>`;
 
-                request.onupgradeneeded = event => {
-                    db = event.target.result;
-                    const store = db.createObjectStore('times', { autoIncrement: true });
-                    store.createIndex('type', 'type', { unique: false });
-                };
-
-                request.onsuccess = event => {
-                    db = event.target.result;
-                };
-
-                request.onerror = event => {
-                    console.error('IndexedDB error:', event.target.errorCode);
-                };
-            }
-
-            function saveTime(type, time, place) {
-                const transaction = db.transaction(['times'], 'readwrite');
-                const store = transaction.objectStore('times');
-                store.add({ type, time, place });
-                transaction.oncomplete = () => {
-                    console.log('Time saved successfully');
-                };
-                transaction.onerror = event => {
-                    console.error('Error saving time:', event.target.errorCode);
-                };
-            }
-
-            function saveFinisherTime(place, time) {
-                let finisherTimes = JSON.parse(localStorage.getItem('finisherTimes')) || [];
-                finisherTimes.push({ place, time });
-                localStorage.setItem('finisherTimes', JSON.stringify(finisherTimes));
-            }
-
-            function removeFinisherTime(place) {
-                let finisherTimes = JSON.parse(localStorage.getItem('finisherTimes')) || [];
-                finisherTimes = finisherTimes.filter(finisher => finisher.place !== place);
-                localStorage.setItem('finisherTimes', JSON.stringify(finisherTimes));
-            }
-
-            function loadSavedTimes() {
-                timesList.innerHTML = ''; // Clear the list before loading
-                let finisherTimes = JSON.parse(localStorage.getItem('finisherTimes')) || [];
-                finisherTimes.forEach(finisher => {
-                    addTimeToList(finisher.time, finisher.place, false);
+                fuelingItems.forEach(item => {
+                    if (item.used > 0) {
+                        schedule += `${item.used} ${item.name} `;
+                        schedule += `<span class="mini">(${item.carbs * item.used}g carbs, ${item.salt * item.used}mg salt, ${item.water * item.used}ml water)</span><br> `;
+                        item.used = 0;
+                    }
                 });
+
+                // schedule += `<span class="mini">(${totalCarbs}g carbs, ${totalSalt}mg salt, ${totalWater}ml water)</span><br> `;
+
+                plan += '<p>' + schedule + '</p>';
             }
-        });
+
+            plan += `<span class="mini">`
+            plan += `<span ${totalCarbs < carbsPerHour * predictedTime * .95 ? 'class="low"' : ''} >${totalCarbs}/${parseInt(carbsPerHour * predictedTime)}</span> grams carbs, `;
+            plan += `<span ${totalSalt < saltPerHour * predictedTime * .95 ? 'class="low"' : ''} >${totalSalt}/${parseInt(saltPerHour * predictedTime)}</span> mg salt, `;
+            plan += `<span ${totalWater < waterPerHour * predictedTime * .95 ? 'class="low"' : ''} >${totalWater}/${parseInt(waterPerHour * predictedTime)}</span> ml water, `;
+            plan += `</span>`;
+
+            shoppingList = '';
+            fuelingItems.forEach(item => {
+                if (item.usedTotal > 0) {
+                    shoppingList += item.usedTotal + ' ' + item.name + '<br>';
+                } else {
+                    return;
+                }
+            });
+
+            let totalPlan = `<h2>List</h2>`;
+            totalPlan += `<p>${shoppingList}</p>`;
+
+            document.getElementById('plan').innerHTML = plan + totalPlan;
+        }
+
     </script>
 </body>
 
